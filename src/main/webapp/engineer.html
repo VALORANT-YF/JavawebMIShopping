@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/engineer.css">
+    <link rel="stylesheet" href="css/base.css">
+    <title>登录界面</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div class="box">
+        <div class="left">
+<!--            <img src="images/left.png" style="width: 80px ; height: 80px">-->
+        </div>
+        <div class="right">
+            <h4>工程师登录</h4>
+            <inframe src="" name="iframeName" style="display: none"></inframe>
+            <form method="post" target="iframeName" id="form">
+                <input class="acc" type="text" placeholder="工号" id="workNumber">
+                <input class="acc" type="password" placeholder="密码" id="engineerPassword">
+                <input class="acc" type="password" placeholder="邀请码(必填)" id="invitationCode">
+                <button value="Login" id = "login" class="submit" type="button">Login</button>
+            </form>
+        </div>
+        <span class="forgetPassword">忘记密码?</span>
+    </div>
+<script>
+    //获取工程师输入的账号,密码,并且比较输入的邀请码是否正确
+    const workNumber = document.getElementById("workNumber");
+    const engineerPassword = document.getElementById("engineerPassword");
+    const invitationCode = document.getElementById("invitationCode");
+
+    //获取提交按钮
+    const submit = document.querySelector("#login");
+    submit.addEventListener('click',function (){
+        //获取输入的邀请码 , 如果正确 向下进行
+        let invitationCode_value = invitationCode.value;
+        if(invitationCode_value != '!@superMan#')
+        {
+            alert("邀请码错误");
+            return;
+        }
+        else
+        {
+            //创建js对象,存储账号和密码
+            let formData = {
+                workNumber:"",
+                password:"",
+            }
+            //获取工号
+            let workNumber_value = workNumber.value;
+            //存储数据
+            formData.workNumber = workNumber_value;
+
+            //获取密码
+            let engineerPassword_value = engineerPassword.value;
+            //存储数据
+            formData.password = engineerPassword_value;
+            console.log(formData);
+
+            //发送post请求
+            axios({
+                method:"post",
+                url:"http://localhost:8080/Java_war/engineer/Engineer_loginServlet",
+                data:formData
+            }).then(function (resp){
+                if(resp.data == "success"){
+                    // console.log("跳转到工程师页面");
+                    location.href = "http://localhost:8080/Java_war/showEngineer.html";
+                }
+                else
+                {
+                    alert(resp.data);
+                }
+            })
+        }
+    })
+
+    //获取忘记密码的按钮
+    const forgetPassword = document.querySelector(".forgetPassword");
+    //点击忘记密码,跳转到修改密码的页面
+    forgetPassword.addEventListener('click',function (){
+        location.href = "http://localhost:8080/Java_war/engineer_changePassword.html";
+    })
+</script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- https://space.bilibili.com/108279272 -->

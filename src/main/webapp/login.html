@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+</head>
+<!-- 响应式页面 -->
+<body>
+    <section>
+        <div class="container">
+            <div class="user signinBX">
+                <div class="imgBx">
+                    <img src="images/注册.png" alt="" style="width:381px ; height: 502px;">
+                </div>
+                <div class="formBx">
+                   <iframe src="" name="iframeName" style="display: none"></iframe>
+                    <form method="post" target="iframeName" id="form">
+                        <h2>Sign In</h2>
+                        <input type="text" placeholder="Username" id = "username">
+                        <input type="password" placeholder="Password" id = "password">
+                        <input type="text" placeholder="Check" id = "code" style="width: 100px">
+                        <img src="http://localhost:8080/Java_war/user/checkCodeServlet" id = "checkCode">
+                        <a href="#" id = "changeImage">看不清,换一张</a><br>
+                        <button value="Login" id = "login" class="button_login">Login</button>
+<!--                        <input type="submit" value="Login" id = "login">-->
+                        <p class="signup">don't have an account?<a href="http://localhost:8080/Java_war/register.html" id="Sign" onclick="toggleForm();">Sign up.</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+<script>
+
+const empty_username = document.getElementById("username");
+empty_username.addEventListener('blur',function (){
+    let username = this.value;
+    //当输入框失去焦点后,判断用户名是否为空
+    if(username == "")
+    {
+        alert("用户名不能为空");
+    }
+})
+    //验证码更换
+document.getElementById("changeImage").onclick = function(){
+document.getElementById("checkCode").src = "http://localhost:8080/Java_war/user/checkCodeServlet?"+new Date().getMilliseconds();
+}
+
+const length_username = document.querySelector("#username");
+const length_password = document.querySelector("#password");
+const code = document.querySelector("#code");
+<!--    当点击完提交按钮之后 发送ajax请求 向后端传输输入框中的账号 密码-->
+const  submit = document.querySelector("#login");
+submit.addEventListener('click',function (){
+    //将input输入框的数据转为json
+    let formData = {
+        username:"",
+        password:"",
+        code:"",
+    };
+    //获取输入框中的内容
+    let username = document.getElementById("username").value;
+    //设置数据
+    formData.username = username;
+    //获取密码输入框中的内容
+    let password = document.getElementById("password").value;
+    formData.password = password;
+    //获取用户输入的验证码
+    let code = document.querySelector("#code").value;
+    formData.code = code;
+
+    //data 属性值可以将js对象自动转化为JSON字符串
+    axios({
+        method:"post",
+        url:"http://localhost:8080/Java_war/user/loginServlet",
+        data:formData
+    }).then(function (resp){
+        if(resp.data === "success"){
+            location.href = "http://localhost:8080/Java_war/index.html";
+        }
+        else{
+            //更换验证码
+            document.getElementById("checkCode").src = "http://localhost:8080/Java_war/user/checkCodeServlet?"+new Date().getMilliseconds();;
+            alert(resp.data);
+        }
+    })
+})
+</script>
+
+</body>
