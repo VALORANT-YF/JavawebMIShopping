@@ -1,0 +1,60 @@
+.bg img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    /* 1vw=1%可视窗口高度 */
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+}
+
+.login_left {
+    position: relative;
+    left: 335px;
+    top: 215px;
+}
+
+.login_right {
+    position: relative;
+    right: -830px;
+    top: -135px;
+    display: flex;
+    flex-direction: row;
+}
+
+.login_left,
+.login_right {
+    overflow: hidden;
+    width: 350px;
+    height: 350px;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    letter-spacing: 0.5em;
+    backdrop-filter: blur(20px);
+    color: #fff;
+    box-shadow: 0 0 30px 10px rgba(0, 0, 0, .3);
+
+    /* background: #000; */
+}
+
+#user_login{
+    font-size: 14px;
+    color: white;
+}
+
+#engineer{
+    font-size: 14px;
+    color: white;
+}
+
+.login_right:hover{
+    cursor: pointer;
+}
+
+.login_left:hover{
+    cursor: pointer;
+}
+

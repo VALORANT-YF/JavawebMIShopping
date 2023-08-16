@@ -1,0 +1,254 @@
+body{
+    background-color: #0F0F0F;
+    width: 100vm;
+    overflow: hidden;
+}
+header {
+    width: 100vm;
+    background-color: black;
+}
+
+header .head {
+    display: flex;
+}
+
+header .head .head_left {
+    margin-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    line-height: 40px;
+}
+
+header .head .head_left .head_leftFlex {
+    display: flex;
+}
+
+header .head .head_left .head_leftFlex .logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+header .head .head_left .head_leftFlex .logoName {
+    color: #ccc;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+header .head .head_right{
+    margin-left: 1045px;
+    line-height: 80px;
+}
+
+header .head .head_right .head_rightFlex {
+    display: flex;
+}
+
+header .head .head_right .head_rightFlex li{
+    color: #ccc;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 14px;
+}
+
+header .head .head_right .head_rightFlex li:hover{
+    cursor: pointer;
+ 
+}
+
+header .head .head_right .head_rightFlex li .quit{
+    font-size: 16px;
+    background-color:rgba(0, 0, 0, 0);
+    color: chocolate;
+}
+
+.main .left_Top .left_TopFlex{
+    display: flex;
+    flex-direction: column;
+}
+
+.main .left_Top .left_TopFlex .avatar{
+    width: 80px;
+    margin-left: 20px;
+    height: 80px;
+    border-radius: 60%;
+}
+
+.main .left_Top {
+    width: 200px;
+    background-color: #171717;
+}
+
+.main .left_Top .left_TopFlex{
+    text-align: center;
+    padding: 40px;
+}
+
+.main .left_Top .left_TopFlex li{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: #ccc;
+    font-size: 14px;
+}
+
+.main{
+    position: relative;
+    top: 35px;
+    left: 70px;
+}
+
+.main .left_Bottom{
+    background-color: black;
+    width: 200px;
+}
+
+.main .left_Bottom .left_BottomFlex{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  
+}
+
+.main .left_Bottom .left_BottomFlex li{
+    height: 60px;
+    line-height: 60px;
+    color: white;
+    font-size: 14px;
+}
+
+.main .right{
+    background-color: black;
+    position: absolute;
+    top: 0px;
+    left: 249px;
+    width: 900px;
+    height: 700px;
+}
+.main .right .rightInformation h1{
+    color: #ccc;
+}
+.main .right .rightInformation .rightInformation_flex{
+    margin-top: 20px;
+    margin-left: 90px;
+}
+
+.main .right .rightInformation .rightInformation_flex .one .avatar{
+    width: 100px;
+    margin-left: 20px;
+    height: 100px;
+    border-radius: 60%;
+}
+
+.main .right .rightInformation .rightInformation_flex li span{
+    color: aliceblue;
+    font-size: 20px;
+}
+
+.main .right .rightInformation .rightInformation_flex li{
+    padding: 20px;
+}
+
+.main .right .rightInformation .change_user{
+    margin-left: 260px;
+    background: #fc5531;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0 20px;
+    text-align: center;
+    width: 400px;
+    height: 50px;
+}
+
+.main .right .rightInformation .rightInformation_flex li i{
+    margin-left: 10px;
+    color: #ccc;
+    font-size: 16px;
+}
+
+.color_change{
+    background-color: #fc5531 !important;
+}
+
+.main .left_Bottom .left_BottomFlex li:nth-child(-n+3):hover{
+    cursor: pointer;
+    background-color: rgba(248, 62, 6, 0.5);
+}
+
+.right .account .rightAccountFlex{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: 130px;
+    left: 180px;
+}
+
+.right .account .rightAccountFlex input{
+    margin: 20px;
+    width: 300px;
+    height: 30px;
+    color: #0FF;
+    font-size: 20px;
+    border: 0px transparent;
+    border-bottom: 2px solid #fff;
+    background-color: #171717;
+}
+
+.right .account .rightAccountFlex input:focus{
+    outline: none;
+    border-bottom: 2px solid #0FF;
+}
+
+.right .account h1{
+    color: #ccc;
+}
+
+.right .account .rightAccountFlex{
+    margin-top: 20px;
+    margin-left: 90px;
+}
+
+.right .account .account_user{
+    position: relative;
+    top: 240px;
+    margin-left: 255px;
+    background: #fc5531;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0 20px;
+    text-align: center;
+    width: 400px;
+    height: 50px;
+}
+
+
+#change_Information{
+    /* background-color: #fff; */
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.change_userInformation{
+    margin: 20px;
+    width: 300px;
+    height: 30px;
+    color: #0FF;
+    font-size: 20px;
+    border: 0px transparent;
+    border-bottom: 2px solid #fff;
+    background-color: black;
+}
+
+.c_btn{
+    margin-left: 117px;
+    background: #fc5531;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0 20px;
+    text-align: center;
+    width: 259px;
+    height: 50px;
+}
