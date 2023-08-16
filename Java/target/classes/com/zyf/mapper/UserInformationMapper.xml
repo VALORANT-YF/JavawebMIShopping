@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zyf.mapper.UserInformationMapper">
+    <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
+<!--    resultMap映射文件 起别名-->
+    <update id="updateUserInformation">
+        update tb_userinformation
+            <set>
+                <if test="UserInformation.avatarPath !=null and UserInformation.avatarPath !='' ">
+                    avatarPath = #{UserInformation.avatarPath},
+                </if>
+                <if test="UserInformation.nickname!=null and UserInformation.nickname!=''">
+                    nickname = #{UserInformation.nickname},
+                </if>
+                <if test="UserInformation.sex != null">
+                    sex = #{UserInformation.sex},
+                </if>
+                <if test="UserInformation.city!=null and UserInformation.city!=''">
+                    city = #{UserInformation.city}
+                </if>
+            </set>
+        where account = #{UserInformation.account};
+    </update>
+
+
+    <select id="selectUserInformationAll" resultType="com.zyf.pojo.UserInformation">
+        select id,avatarPath,nickname,sex,account,city from tb_userinformation where account = #{account};
+    </select>
+
+    <select id="selectIndexByAccount" resultType="com.zyf.pojo.UserInformation">
+        select avatarPath,nickname from tb_userinformation where account = #{account};
+    </select>
+
+    <delete id="deleteUserInformation">
+        delete from tb_userinformation where account = #{account};
+    </delete>
+</mapper>

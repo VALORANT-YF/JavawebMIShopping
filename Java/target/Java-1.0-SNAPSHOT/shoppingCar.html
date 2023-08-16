@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>购买商品</title>
+  <link rel="stylesheet" href="css/shoppingCar.css">
+  <link rel="stylesheet" href="css/base.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+  <script src="js/cookieUtill.js"></script>
+</head>
+
+<body>
+<!-- 头部导航栏 -->
+<header>
+  <div class="w head">
+    <div class="head_left">
+        <span class="logo">
+          <img src="images/logo-mi2.png" alt="">
+        </span>
+      <span class="webName">
+          <p>购物车</p>
+        </span>
+    </div>
+    <div class="head_right">
+      <ul class="function_flex">
+        <li class="back_function" style="margin-right: 20px">
+          返回
+        </li>
+        <li class="view">
+          <a href="http://localhost:8080/Java_war/userInformation.html" style="color: white">个人中心</a>
+        </li>
+        <li class="quit quitCar">
+          退出
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+<!-- 侧边栏 -->
+<div class="sideways">
+  <ul class="sideways_flex">
+    <li class="buy_car" style="background-color:#fc5531;">
+      购物车
+    </li>
+    <li class="finish_buy">
+      已经支付
+    </li>
+  </ul>
+</div>
+<div class="show">
+  <!-- 购物车 -->
+  <div class="shoppingcar">
+    <!--    查询模块-->
+    <div class="car_search">
+      <input type="text" placeholder="商品名称" class="el-input__inner car_brandName" id="shoppingCar_inputBrandName">
+      <input type="text" placeholder="收件人姓名" class="el-input__inner car_addressee" id="shoppingCar_inputAddressee">
+      <button type="button" class="el-button el-button--primary" id="search_submit_btn">
+        <span>查询</span>
+      </button>
+    </div>
+    <!--    操作模块-->
+    <div class="search_function">
+      <button type="button" class="el-button el-button--primary" id="search_remove_btn">
+        <span>批量删除</span>
+      </button>
+      <button type="button" class="el-button el-button--primary" id="search_back_btn" style = "background-color:#cccccc; display: none" >
+        <span>返回</span>
+      </button>
+    </div>
+    <!--    表单模块-->
+    <div class="search_table">
+      <table cellspacing="0" cellpadding="0" border="0" class="el-table__header">
+        <thead class="has-gutter">
+        <tr>
+          <th colspan="1" rowspan="1" class="el-table_1_column_1   el-table-column--selection  is-leaf">
+            <div class="cell">
+              <input type="checkbox" aria-hidden="false" class="el-checkbox__original" value="" id="shoppingCar_inputs">
+            </div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_2 is-leaf">
+            <div class="cell">商品</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_3 is-leaf">
+            <div class="cell">商品名称</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_4 is-leaf">
+            <div class="cell">订单地址</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_5 is-leaf">
+            <div class="cell">价格</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_6 is-leaf">
+            <div class="cell">收件人</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_7 is-leaf">
+            <div class="cell">商品数量</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_8 is-leaf">
+            <div class="cell">操作</div>
+          </th>
+          <th class="gutter" style="width: 0px; display: none;"></th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+    <!--    信息模块-->
+    <div class="search_information shoppingCarTop">
+      <table class="el-table__header">
+        <thead class="search_has-gutter-information" id="buyCar_search_information">
+          <!--购物车查询不到数据时渲染的页面-->
+          <div class="tip" style="display: none" id="tip_car">
+            <span class="tip_information">查询不到数据,请检查商品名称或者收件人输入是否有误</span>
+            <hr class="tip_hr">
+          </div>
+        </thead>
+      </table>
+    </div>
+    <!--    分页工具-->
+    <div id="search_isNav">
+      <button disabled="false" id="search_prev">上一页</button>
+      <button id="search_next">下一页</button>
+    </div>
+    <p id="search_pagination">共?页，当前?页</p>
+  </div>
+  <!--  修改框-->
+  <div class="brandCar" style = "display: none">
+    <ul class="brandCar_flex">
+      <li>
+        <input type="text" placeholder="收件人姓名" name="consignee" id="consignee_car">
+        <input type="text" placeholder="收件地址" name="address" id="consignee_addressCar">
+        <input class="number" type="number" min="1" max="10" value="1" id="goods_numberCar">
+      </li>
+    </ul>
+    <button id="submit_addressCar">添加</button>
+    <button id="close_addressCar">关闭</button>
+  </div>
+  <!-- 已经支付 -->
+  <!-- 查询模块 -->
+  <div class="payment" style="display: none">
+    <div class="payment_input">
+      <input type="text" placeholder="商品名称" class="el-input__inner" id="finish_brandName">
+      <input type="text" placeholder="收件人姓名" class="el-input__inner" id="finish_addressee">
+      <button type="button" class="el-button el-button--primary" id="finish_submit_btn">
+        <span>查询</span>
+      </button>
+    </div>
+    <!-- 操作模块儿 -->
+    <div class="payment_function">
+      <button type="button" class="el-button el-button--primary" id="finish_remove_btn">
+        <span>批量删除</span>
+      </button>
+      <button type="button" class="el-button el-button--primary" id="finish_back_btn" style="background-color:#cccccc; display: none">
+        <span>返回</span>
+      </button>
+    </div>
+    <!-- 表单模块 -->
+    <div class="table-wrapper">
+      <table cellspacing="0" cellpadding="0" border="0" class="el-table__header">
+        <thead class="has-gutter">
+          <tr>
+          <th colspan="1" rowspan="1" class="el-table_1_column_1   el-table-column--selection  is-leaf">
+            <div class="cell">
+              <input type="checkbox" aria-hidden="false" class="el-checkbox__original" value="" id="checkAll">
+            </div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_2 is-leaf">
+            <div class="cell">商品</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_3 is-leaf">
+            <div class="cell">商品名称</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_4 is-leaf">
+            <div class="cell">订单地址</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_5 is-leaf">
+            <div class="cell">价格</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_6 is-leaf">
+            <div class="cell">收件人</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_7 is-leaf">
+            <div class="cell">数量</div>
+          </th>
+          <th colspan="1" rowspan="1" class="el-table_1_column_8 is-leaf">
+            <div class="cell">操作</div>
+          </th>
+          <th class="gutter" style="width: 0px; display: none;"></th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+    <!-- 信息模块 -->
+    <div class="table-wrapper-information">
+      <table class="el-table__header">
+        <thead class="has-gutter-information" id="finish_search_information" >
+
+        </thead>
+      </table>
+    </div>
+    <!-- 分页工具 -->
+    <div id="isNav">
+      <button disabled="false" id="prev">上一页</button>
+      <button id="next">下一页</button>
+    </div>
+    <p id="pagination">共?页，当前?页</p>
+  </div>
+</div>
+<!--遮盖-->
+<div id="hidebg"></div>
+<script>
+  //Tab栏切换 start
+  const buyCar = document.querySelector(".buy_car");
+  const finishBuy = document.querySelector(".finish_buy");
+  const payment = document.querySelector(".payment");
+  const shoppingCar = document.querySelector(".shoppingcar");
+  //已经支付订单
+  finishBuy.addEventListener('click',function (){
+    buyCar.style.backgroundColor = "";
+    finishBuy.style.backgroundColor = "#fc5531";
+    payment.style.display = "block";
+    shoppingCar.style.display = 'none';
+  })
+  //购物车
+  buyCar.addEventListener('click',function (){
+    buyCar.style.backgroundColor = "#fc5531";
+    finishBuy.style.backgroundColor = "";
+    payment.style.display = "none";
+    shoppingCar.style.display = 'block';
+  })
+  //当页面全部加载完成之后,开始实现功能
+  // import {isObject} from "./element-ui/lib/utils/types";
+  //已经支付订单的商品数据 后续从数据库中查询出商品数据
+  let bookList = [];
+  let buyCarList = [];
+  let pageNum = 1; // 已经支付页面当前页数，默认为1
+  let pageNumCar = 1; //购物车页面当前页数 , 默认为1
+
+  let getList = function(){
+    //渲染购物车页面
+    buyCarList=getListFromCookie("cart");
+    buyCarData(pageNumCar)
+    //已经完成页面
+    //获取删除按钮 已经该删除按钮所对应的全部的商品信息
+    const finishRemoves = document.querySelectorAll(".finish_remove");
+    const contentFinishs = document.querySelectorAll(".contentFinish");
+    for(let i = 0 ; i < contentFinishs.length ; i++){
+      finishRemoves[i].addEventListener('click',function (){
+        //获取被点击的商品的所有信息
+        let finishBrand = contentFinishs[i].children;
+        let id = finishBrand[8].innerText;
+        //发送请求 开始删除(单个删除)
+        axios({
+          method:"get",
+          url:"http://localhost:8080/Java_war/shopping/deleteFinishBrandServlet?id="+id
+        }).then(function (){
+          //重新渲染页面 通过alert即可
+          alert("删除成功");
+          selectFinishAll();
+        })
+      })
+    }
+    //退出登录
+    const quitCar = document.querySelector(".quitCar");
+    quitCar.addEventListener('click',function (){
+      location.href = "http://localhost:8080/Java_war/user/userQiutServlet";
+    })
+    //已经支付的订单复选框
+    //当菜单栏的复选框被选中之后,下面所有的复选框都被选中
+    const checkAll = document.getElementById("checkAll");
+    //获取商品前面的复选框
+    const checkBrandIds = document.querySelectorAll(".checkBrandId");
+    //全选
+    checkAll.addEventListener('click',function (){
+      let checkBrands = document.getElementsByName("brand");
+      for(let i = 0 ; i < checkBrands.length ; i++){
+        checkBrands[i].checked = checkAll.checked;
+      }
+    })
+    //取消全选
+    let flag = 0;
+    for(let i = 0 ; i < checkBrandIds.length ; i++){
+      checkBrandIds[i].addEventListener('click',function (){
+        if(checkBrandIds[i].checked === false){
+          flag = 0;
+          checkAll.checked = false;
+        }
+        if(checkBrandIds[i].checked === true){
+          flag = 1;
+        }
+      })
+    }
+    //购物车页面的复选框
+    //当菜单栏的复选框被选中之后,下面的所有复选框都被选中
+    const shoppingCar_inputs = document.getElementById("shoppingCar_inputs");//菜单栏的复选框按钮
+    //获取每条商品前的复选框
+    const shoppingCar_input = document.querySelectorAll(".shoppingCar_input");
+    //全选
+    shoppingCar_inputs.addEventListener('click',function (){
+      let shoppingBrands = document.getElementsByName("shoppingBrand");
+      for(let i = 0 ; i < shoppingBrands.length ; i++){
+        shoppingBrands[i].checked = shoppingCar_inputs.checked;
+      }
+    })
+    //取消全选
+    let shoppingCar_flag = 0 ;
+    for(let i = 0 ; i < shoppingCar_input ; i++){
+      shoppingCar_input[i].addEventListener('click',function (){
+        if(shoppingCar_input[i].checked === false){
+          shoppingCar_flag = 0;
+          shoppingCar_inputs.checked = false;
+        }
+        if(shoppingCar_input[i].checked === true){
+          shoppingCar_flag = 1;
+        }
+      })
+    }
+    let ids = [];
+    //批量删除
+    const finish_remove_btn = document.getElementById("finish_remove_btn");
+    finish_remove_btn.addEventListener('click',function (){
+      for(let i = 0 ; i < checkBrandIds.length ; i++){
+        if(checkBrandIds[i].checked){//如果复选框被选中 获取id
+          let idChildren = contentFinishs[i].children;
+          ids.push(idChildren[8].innerText);
+        }
+      }
+      //发送请求
+      axios({
+        method:"post",
+        url:"http://localhost:8080/Java_war/shopping/deleteFinishBrandByIdsServlet",
+        data:ids
+      }).then(function (){
+        alert("删除成功");
+        ids = [];//清空数组
+        //刷新页面
+        selectFinishAll();
+      })
+    })
+    //购物车页面的查询功能 start
+    const search_submit_btn = document.getElementById("search_submit_btn");//购物车页面搜索按钮
+    const shoppingCar_inputBrandName = document.getElementById("shoppingCar_inputBrandName");//商品名称输入框
+    const shoppingCar_inputAddressee = document.getElementById("shoppingCar_inputAddressee");//收件人
+    search_submit_btn.addEventListener('click',function (){
+      //先清空
+      buyCarList = [];
+      let inputBrandName = shoppingCar_inputBrandName.value;//用户输入的商品名称
+      let inputAddressee = shoppingCar_inputAddressee.value;//用户输入的收件人姓名
+      let cartInformation = getListFromCookie("cart");//获取cookie内存储的全部的商品信息
+      for(let i = 0 ; i < cartInformation.length ; i++){
+        if(inputBrandName !== "" && inputAddressee !== ""){
+          if(cartInformation[i].brandName === inputBrandName && cartInformation[i].addressee === inputAddressee){
+            buyCarList.push(cartInformation[i]);
+          }
+        }
+        else if(inputBrandName !== "" && inputAddressee === ""){
+          if(cartInformation[i].brandName === inputBrandName){
+            buyCarList.push(cartInformation[i]);
+          }
+        }
+        else if(inputAddressee !== "" && inputBrandName === ""){
+          if(cartInformation[i].addressee === inputAddressee){
+            buyCarList.push(cartInformation[i]);
+          }
+        }
+      }
+      buyCarData(pageNumCar);
+      search_back_btn.style.display = "block";
+      const gutter_information = document.querySelector("#buyCar_search_information");
+      //如果渲染页面完之后的页面为空 提示用户输入的信息错误
+      if(gutter_information.innerHTML === ""){
+        document.getElementById("tip_car").style.display = "block";
+      }
+    })
+    //购物车页面查询功能 end
+  }//getList方法结束
+  const search_back_btn = document.getElementById("search_back_btn");//返回按钮
+  search_back_btn.addEventListener('click',function (){
+    //刷新页面
+    location.reload();
+  })
+  //购物车页面三个操作按钮 功能封装 初始页面
+  function operate_brandCar(shoppingCar_input,carBtn_removes,search_remove_btn,carBtn_changes,carBtn_buys){
+    //购物车页面的删除功能 单个删除
+    for(let i = 0 ; i < carBtn_removes.length ; i++){
+      carBtn_removes[i].addEventListener('click',function (){
+        let ss = carBtn_removes[i].parentNode.parentNode;
+        let searchInformation_addressee = ss.children[5].innerText; //点击的按钮对应的收件人
+        let searchInformation_receiptAddress = ss.children[3].innerText;//点击的按钮对应的订单地址
+        let searchInformation_brandName = ss.children[2].innerText;//商品名称
+        let remove_id;
+        let buyBrandInformation = getListFromCookie("cart");
+        for(let j = 0 ; j < buyBrandInformation.length ; j++){
+          if(buyBrandInformation[j].addressee === searchInformation_addressee && buyBrandInformation[j].receiptAddress === searchInformation_receiptAddress && buyBrandInformation[j].brandName === searchInformation_brandName){
+            remove_id = buyBrandInformation[j].id;
+            break;
+          }
+        }
+        let result = [];
+        for(let j = 0 ; j < buyBrandInformation.length ; j++){
+          if(buyBrandInformation[j].id !== remove_id){
+            result.push(buyBrandInformation[j]);
+          }
+        }
+        brandCarHtml(result);
+        alert("删除成功");
+      })
+    }
+    //购物车页面的删除功能 批量删除
+    search_remove_btn.addEventListener('click',function(){
+      let buyBrandInformation = getListFromCookie("cart");
+      let brandCarId = [];
+      for(let i = 0 ; i < shoppingCar_input.length ; i++){
+        //没有被选中的复选框的商品信息添加到数组中
+        if(!shoppingCar_input[i].checked){
+          brandCarId.push(buyBrandInformation[i])
+        }
+      }
+      brandCarHtml(brandCarId);
+    })
+    //修改框弹出
+    for(let i = 0 ; i < carBtn_changes.length ; i++){
+      carBtn_changes[i].addEventListener('click',function (){
+        document.querySelector(".brandCar").style.display = "block";
+        document.getElementById("hidebg").style.display = "block";
+        let ss = carBtn_removes[i].parentNode.parentNode;
+        let searchInformation_addressee = ss.children[5].innerText; //点击的按钮对应的收件人
+        let searchInformation_receiptAddress = ss.children[3].innerText;//点击的按钮对应的订单地址
+        let searchInformation_brandName = ss.children[2].innerText;//商品名称
+        //待修改数据的id下标
+        let change_id;
+        //将点击的商品的信息回显到弹出框中
+        let buyBrandInformation = getListFromCookie("cart");
+        for(let j = 0 ; j < buyBrandInformation.length ; j++){
+          if(buyBrandInformation[j].addressee === searchInformation_addressee && buyBrandInformation[j].receiptAddress === searchInformation_receiptAddress && buyBrandInformation[j].brandName === searchInformation_brandName){
+            change_id = j;
+            break;
+          }
+        }
+        let changeBrandInformation = buyBrandInformation[change_id];
+        //数据回显
+        document.getElementById("consignee_car").value = changeBrandInformation.addressee;//收件人姓名
+        document.getElementById("consignee_addressCar").value = changeBrandInformation.receiptAddress;//收件地址
+        document.getElementById("goods_numberCar").value = changeBrandInformation.brandNumber;//商品数量
+        //修改数据
+        const submit_addressCar = document.getElementById("submit_addressCar");
+        submit_addressCar.addEventListener('click',function (){
+          //确定修改商品之前 需要先判断 修改之后是否会造成商品的重复
+          let changeFlag = 1; //1表示商品没有重复的
+          //当收件人addressee 订单地址receiptAddress 商品名称 brandName  商品的数量 相同时
+          //需要判断修改的商品是否是它本身
+          for(let k = 0 ; k < buyBrandInformation.length ; k++){
+            if (k !== change_id && buyBrandInformation[k].addressee === document.getElementById("consignee_car").value && buyBrandInformation[k].receiptAddress === document.getElementById("consignee_addressCar").value && buyBrandInformation[k].brandName === searchInformation_brandName){
+              changeFlag = 0;
+              break;
+            }
+          }
+          if(changeFlag === 1){
+            buyBrandInformation[change_id].addressee = document.getElementById("consignee_car").value;
+            buyBrandInformation[change_id].receiptAddress = document.getElementById("consignee_addressCar").value;
+            buyBrandInformation[change_id].brandNumber = document.getElementById("goods_numberCar").value;
+
+            //商品数量修改之后 价格也需要修改
+            let aPrice;
+            //查询商品单价
+            axios({
+              method:"get",
+              url:"http://localhost:8080/Java_war/brand/selectPriceServlet?brandName="+buyBrandInformation[i].brandName
+            }).then(function (resp){
+              aPrice = resp.data;
+              buyBrandInformation[i].price = parseInt(aPrice) * parseInt(buyBrandInformation[i].brandNumber);
+              brandCarHtml(buyBrandInformation);
+            })
+            alert("修改成功");
+          }
+          else{
+            alert("购物车内已存在此商品");
+          }
+          document.querySelector(".brandCar").style.display = "none";
+          document.getElementById("hidebg").style.display = "none";
+        })
+      })
+    }
+    //购买商品
+    for(let i = 0 ; i < carBtn_buys.length ; i++){
+      carBtn_buys[i].addEventListener('click',function (){
+        //查询当前登录的账号
+        let shoppingAccount1;
+        axios({
+          method: "get",
+          url:"http://localhost:8080/Java_war/user/indexshow"
+        }).then(function (resp){
+          shoppingAccount1 = resp.data;
+          //获取点击的商品的信息
+          let buyBrandInformation = getListFromCookie("cart");
+          let ss = carBtn_removes[i].parentNode.parentNode;
+          let searchInformation_addressee = ss.children[5].innerText; //点击的按钮对应的收件人
+          let searchInformation_receiptAddress = ss.children[3].innerText;//点击的按钮对应的订单地址
+          let searchInformation_brandName = ss.children[2].innerText;//商品名称
+          let buy_id;//匹配的id的下标
+          let buyID;//匹配的ID
+          for(let j = 0 ; j < buyBrandInformation.length ; j++){
+            if(buyBrandInformation[j].addressee === searchInformation_addressee && buyBrandInformation[j].receiptAddress === searchInformation_receiptAddress && buyBrandInformation[j].brandName === searchInformation_brandName){
+              buy_id = j;
+              buyID = buyBrandInformation[j].id;
+              break;
+            }
+          }
+          let payBrand = {
+            addressee:buyBrandInformation[buy_id].addressee,
+            brandName:buyBrandInformation[buy_id].brandName,
+            brandImg:buyBrandInformation[buy_id].brandImg,
+            receiptAddress:buyBrandInformation[buy_id].receiptAddress,
+            shoppingAccount:shoppingAccount1,
+            brandNumber:buyBrandInformation[buy_id].brandNumber,
+            price:buyBrandInformation[buy_id].price
+          }
+          axios({
+            method:"post",
+            url:"http://localhost:8080/Java_war/shopping/addBuyBrandServlet?remember=0",
+            data:payBrand
+          }).then(function (){
+            //将改商品从购物车中删除
+            let result = [];
+            for(let j = 0 ; j < buyBrandInformation.length ; j++){
+              if(buyBrandInformation[j].id !== buyID){
+                result.push(buyBrandInformation[j]);
+              }
+            }
+            brandCarHtml(result);
+            alert("购买成功");
+            location.reload();
+          })
+        })
+      })
+    }
+  }
+  //更新购物车页面的数据
+  function brandCarHtml(brandCatHtmlInformation){
+    deleteListFromCookie("cart");
+    addListToCookie("cart",brandCatHtmlInformation);
+    buyCarList = getListFromCookie("cart");
+    buyCarData(pageNumCar);
+  }
+  //修改弹框关闭
+  const close_addressCar = document.getElementById("close_addressCar");
+  close_addressCar.addEventListener('click',function (){
+    document.querySelector(".brandCar").style.display = "none";
+    document.getElementById("hidebg").style.display = "none";
+  })
+  //已经支付
+  let selectFinishAll = function (){
+    bookList = [];
+    let shoppingAccount1;
+    axios({
+      method: "get",
+      url:"http://localhost:8080/Java_war/user/indexshow"
+    }).then(function (resp){
+      shoppingAccount1 = resp.data;
+      //查询用户已经支付的商品的信息
+      axios({
+        method:"get",
+        url:"http://localhost:8080/Java_war/shopping/selectFinishMoneyServlet?shoppingAccount="+shoppingAccount1
+      }).then(function (resp){
+        let formData = resp.data;
+        for(let i = 0 ; i < formData.length ; i++){
+          bookList.push(formData[i]);
+        }
+        // 已经支付
+        finishData(pageNum)
+      })
+    })
+  }
+  selectFinishAll();
+  //end
+  //分页
+  const limit = 5; // 每页显示多少条数据
+  let maxPage = Math.ceil(bookList.length / limit); // 已经支付最大页数
+  let maxPageCar;//购物车页面最大页数
+  const prev = document.getElementById("prev");
+  const next = document.getElementById("next");
+  const search_prev = document.getElementById("search_prev");
+  const search_next = document.getElementById("search_next");
+  // 更新已经支付订单的页面数据
+  function finishData(n){
+    const listGroup = document.querySelector(".has-gutter-information");
+    const pagination = document.getElementById("pagination");
+    // 清空所有数据
+    listGroup.innerHTML = '';
+    // 循环遍历每一条数据
+    for (let i = (n - 1) * limit; i < n * limit; i++) {
+      const obj = bookList[i];
+      maxPage = Math.ceil(bookList.length / limit);
+      // 如果有值才添加到元素中。
+      // 防止在最后一页时，数据条数小于limit，获取的obj为undefind，出现报错。
+      obj && (listGroup.insertAdjacentHTML(
+        "beforeend",
+        `<tr class="isContents contentFinish">
+            <th colspan="1" rowspan="1" class="el-table_1_column_1   el-table-column--selection  is-leaf">
+              <div class="cell">
+                <input type="checkbox" aria-hidden="false" class="el-checkbox__original checkBrandId" value="" name="brand">
+              </div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_2 is-leaf">
+              <div class="cell">
+                <img src="${obj.brandImg}" alt="" class="brandCarImg">
+              </div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_3 is-leaf">
+              <div class="cell">${obj.brandName}</div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_4 is-leaf">
+              <div class="cell">${obj.receiptAddress}</div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_5 is-leaf">
+              <div class="cell">${obj.price}</div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_6 is-leaf">
+              <div class="cell">${obj.addressee}</div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_7 is-leaf">
+              <div class="cell">${obj.brandNumber}</div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_8 is-leaf">
+              <button class="table_btn finish_remove">删除</button>
+            </th>
+            <th class="gutter" style="width: 0px; display: none;">${obj.id}</th>
+        </tr>
+      `)
+      )
+    }
+    // 更新当前页数和总页数
+    pagination.innerHTML = `共${maxPage}页，当前${pageNum}页`
+    // 执行完之后的方法
+    getList()
+  }
+  // 更新购物车页面数据（n当前页数）
+  function buyCarData(n) {
+    const searchGroup = document.querySelector(".search_has-gutter-information");
+    const search_pagination = document.getElementById("search_pagination");
+    // 清空所有数据
+    searchGroup.innerHTML = '';
+    // 循环遍历每一条数据
+    for (let i = (n - 1) * limit; i < n * limit; i++) {
+      const obj_search = buyCarList[i];
+      maxPageCar = Math.ceil(buyCarList.length / limit);
+      // 如果有值才添加到元素中。
+      // 防止在最后一页时，数据条数小于limit，获取的obj为undefind，出现报错。
+      //购物车内的数据
+      obj_search && (searchGroup.insertAdjacentHTML(
+        "beforeend",
+        `<tr class="isContents contentCar" index = ${i}>
+            <th colspan="1" rowspan="1" class="el-table_1_column_1   el-table-column--selection  is-leaf">
+              <div class="cell">
+                <input type="checkbox" aria-hidden="false" class="el-checkbox__original shoppingCar_input" value="" name="shoppingBrand">
+              </div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_2 is-leaf">
+              <div class="cell">
+                <img src="${obj_search.brandImg}" alt="" class="brandCarImg">
+              </div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_3 is-leaf el-table_column3_brandName">
+              <div class="cell">${obj_search.brandName}</div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_4 is-leaf">
+              <div class="cell">${obj_search.receiptAddress}</div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_5 is-leaf">
+              <div class="cell">${obj_search.price}</div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_6 is-leaf el-table_column_addressee">
+              <div class="cell">${obj_search.addressee}</div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_7 is-leaf">
+              <div class="cell">${obj_search.brandNumber}</div>
+            </th>
+            <th colspan="1" rowspan="1" class="el-table_1_column_8 is-leaf">
+              <button class="table_btn carBtn_remove">删除</button>
+              <button class="table_btn carBtn_change">修改</button>
+              <button class="table_btn carBtn_buy">购买</button>
+            </th>
+            <th class="gutter" style="width: 0px; display: none;"></th>
+        </tr>
+      `))
+    }
+    //将三个操作按钮的功能分别绑定给对应按钮
+    const shoppingCar_input2= document.querySelectorAll(".shoppingCar_input");
+    const carBtn_removes2 = document.querySelectorAll(".carBtn_remove");
+    const search_remove_btn2 = document.getElementById("search_remove_btn");
+    const carBtn_changes2 = document.querySelectorAll(".carBtn_change");
+    const carBtn_buys2 = document.querySelectorAll(".carBtn_buy");
+    operate_brandCar(shoppingCar_input2,carBtn_removes2,search_remove_btn2,carBtn_changes2,carBtn_buys2);
+    // 更新当前页数和总页数
+    search_pagination.innerHTML = `共${maxPageCar}页，当前${pageNumCar}页`
+  }
+  // 更新已经支付页面的按钮状态
+  function updateBtnStatu(pageNum) {
+    prev.disabled = pageNum <= 1 ? true : false
+    next.disabled = pageNum >= maxPage ? true : false
+  }
+  //更新购物车页面的按钮状态
+  function updateBtnStatus_car(pageNumCar){
+    //购物车按钮状态
+    search_prev.disabled = pageNumCar <= 1 ? true : false
+    search_next.disabled = pageNumCar >= maxPageCar ? true : false
+  }
+
+  // 点击上一页
+  prev.onclick = function () {
+    // 如果当前页是第一页，则不做任何操作
+    if (pageNum === 1) return
+    pageNum--
+    finishData(pageNum)
+    updateBtnStatu(pageNum)
+  };
+  search_prev.onclick = function (){
+    // 如果当前页是第一页，则不做任何操作
+    if (pageNumCar === 1) return
+    pageNumCar--
+    buyCarData(pageNumCar)
+    updateBtnStatus_car(pageNumCar)
+  };
+  // 点击下一页
+  next.onclick = function () {
+    // 如果当前页是最后一页了，则不做任何操作
+    if (pageNum === maxPage) return
+    pageNum++
+    finishData(pageNum)
+    updateBtnStatu(pageNum)
+  };
+  search_next.onclick = function (){
+    // 如果当前页是最后一页了，则不做任何操作
+    if (pageNumCar === maxPageCar) return
+    pageNumCar++
+    buyCarData(pageNumCar)
+    updateBtnStatus_car(pageNumCar)
+  };
+  //已经支付订单的查询功能
+  const finishBrandName = document.getElementById("finish_brandName");//商品名称输入框
+  const finishAddressee = document.getElementById("finish_addressee");//收件人输入框
+  const finishSubmit = document.getElementById("finish_submit_btn");//查询按钮
+  //获取返回按钮
+  const finishBack = document.getElementById("finish_back_btn");
+  finishSubmit.addEventListener('click',function (){
+    //获取两个输入框内的值
+    let finishBrandName_value = finishBrandName.value;
+    let finsihAddressee_value = finishAddressee.value;
+    if(finsihAddressee_value === '' && finishBrandName_value === ''){
+      alert("请输入你想查询的商品");
+    }
+    else{
+      //获取当前登录的账号
+      axios({
+        method: "get",
+        url:"http://localhost:8080/Java_war/user/indexshow"
+      }).then(function (resp){
+        let deleteBrandShoppingAccount = resp.data;
+        //发送请求
+        axios({
+          method:"psot",
+          url:"http://localhost:8080/Java_war/shopping/selectFinishLikeServlet?brandName="+finishBrandName_value+"&addressee="+finsihAddressee_value,
+          data: deleteBrandShoppingAccount
+        }).then(function (resp){
+          //查询到的数据
+          let formData = resp.data;
+          bookList = [];
+          for (let i = 0 ; i < formData.length ; i++){
+            bookList.push(formData[i]);
+          }
+          //渲染页面
+          finishData(1);
+        })
+      })
+      finishBack.style.display = "block";
+    }
+  })
+  //点击返回按钮 重新渲染页面
+  finishBack.addEventListener('click',function (){
+    bookList = [];//先清空在重新赋值
+    //清空输入框中的内容
+    finishAddressee.value = '';
+    finishBrandName.value = '';
+    //重新渲染页面
+    selectFinishAll();
+  })
+  //返回
+  const back_function = document.querySelector(".back_function");
+  back_function.addEventListener('click',function (){
+    location.href = "http://localhost:8080/Java_war/index.html";
+  })
+</script>
+</body>
+
+</html>

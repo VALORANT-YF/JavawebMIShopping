@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/vue.js"></script>
+</head>
+<!-- 响应式页面 -->
+<body>
+    <section>
+        <div class="container">
+            <div class="user signinBX">
+                <div class="imgBx">
+                    <img src="images/注册.png" alt="" style="width:381px ; height: 502px;">
+                </div>
+                <div class="formBx">
+                   <iframe src="" name="iframeName" style="display: none"></iframe>
+                    <form method="post" target="iframeName" id="form">
+                        <h2>Sign In</h2>
+                        <i style="display: none ; color : red" class="have">用户名已经存在</i>
+                        <input type="text" placeholder="Username" id = "username" class="username">
+                        <input type="password" placeholder="Password" id = "password">
+                        <input type="password" placeholder="Confirm Password" id = "confirm_password">
+                        <input type="text", placeholder="Check" id = "code" style="width: 100px">
+                        <img src="http://localhost:8080/Java_war/user/checkCodeServlet" id = "checkCode">
+                        <a href="#" id = "changeImage">看不清,换一张</a><br>
+                        <button value="Login" id = "login" class="button_login button_register">Register</button>
+<!--                        <input type="submit" value="Login" id = "login">-->
+                        <p class="signup">don't have an account?<a href="http://localhost:8080/Java_war/login.html" id="Sign">Sign up.</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+<script>
+//登录注册页面切换
+
+    //验证码更换
+document.getElementById("changeImage").onclick = function(){
+console.log(1);
+document.getElementById("checkCode").src = "http://localhost:8080/Java_war/user/checkCodeServlet?"+new Date().getMilliseconds();;
+}
+
+// 当鼠标离开username 输入框时 , 判断用户名是否存在
+
+const lose = document.querySelector(".username");
+lose.addEventListener('blur',function (){
+    if(this.value === "")
+    {
+        alert("用户名不能为空");
+        return;
+    }
+    const have = document.querySelector(".have");
+    axios({
+        method:"get",
+        url:"http://localhost:8080/Java_war/user/registerServlet_username?username="+this.value,
+    }).then(function (resp){
+        if(resp.data === "exist")
+        {
+            have.style.display = 'block';
+        }
+        if(resp.data === "success")
+        {
+            have.style.display = 'none';
+        }
+    })
+})
+
+//注册 即向tb_user表中添加 username password
+const username = document.querySelector("#username");
+const password = document.querySelector("#password");
+const confirm_password = document.querySelector("#confirm_password");
+const code = document.querySelector("#code");
+
+//点击注册按钮之后
+const register = document.querySelector(".button_register");
+register.addEventListener('click',function (){
+    //将input输入框中的值转换为json字符串
+    let formData ={
+        username:"",
+        password:"",
+        code:"",
+    };
+
+    //获取用户名输入框的内容
+    let username = document.getElementById("username").value;
+    //设置数据
+    formData.username = username;
+
+    //获取密码输入框的内容
+    let password = document.getElementById("password").value;
+    //设置数据
+    formData.password = password;
+
+    //获取验证码
+    let code = document.getElementById("code").value;
+    //设置数据
+    formData.code = code;
+
+    //获取第二个密码框中的内容
+    let confirm_password = document.getElementById("confirm_password").value;
+    if(password !== confirm_password)
+    {
+        alert("两次密码不一致");
+        document.getElementById("checkCode").src = "http://localhost:8080/Java_war/user/checkCodeServlet?"+new Date().getMilliseconds();
+        return;
+    }
+    axios({
+        method: "post",
+        url: "http://localhost:8080/Java_war/user/registerServlet",
+        data:formData
+    }).then(function (resp){
+        if(resp.data === "success") {
+            axios({
+                method:"get",
+                url:"http://localhost:8080/Java_war/user/addUserInformation?account="+username
+            }).then(function (resp){
+                if(resp.data !== "failed"){
+                    location.href = "http://localhost:8080/Java_war/login.html";
+                }
+            })
+        }
+        else {
+            document.getElementById("checkCode").src = "http://localhost:8080/Java_war/user/checkCodeServlet?"+new Date().getMilliseconds();;
+            alert(resp.data);
+        }
+    })
+
+})
+</script>
+
+</body>

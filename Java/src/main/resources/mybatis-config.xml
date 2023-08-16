@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+<!--    简化映射配置文件中resultType的属性-->
+<!--    <typeAliases>-->
+<!--        &lt;!&ndash;name属性的值是实体类所在包&ndash;&gt;-->
+<!--        <package name="com.zyf.pojo"/>-->
+<!--    </typeAliases>-->
+    <!--    打印执行的Sql语句-->
+<!--    <settings>-->
+<!--        &lt;!&ndash; 打印查询语句 &ndash;&gt;-->
+<!--        <setting name="logImpl" value="STDOUT_LOGGING"/>-->
+<!--    </settings>-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <!--                数据库链接信息-->
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql:///db1?allowMultiQueries = true"/>
+                <property name="username" value="root"/>
+                <property name="password" value="zyf9630"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!--        加载sql映射文件-->
+        <!--        <mapper resource="com/zyf/mapper/userMapper.xml"/>-->
+<!--        放在同一目录下 可以简化-->
+        <package name="com.zyf.mapper"/>
+    </mappers>
+
+
+</configuration>
+

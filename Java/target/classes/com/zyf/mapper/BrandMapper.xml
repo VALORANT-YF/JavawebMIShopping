@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zyf.mapper.BrandMapper">
+
+    <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
+    <select id="selectAllBrand" resultType="com.zyf.pojo.Brand">
+        select id, brandName,companyName,ordered,status from tb_brand where flag = 1;
+    </select>
+
+
+    <insert id="addBrand">
+        insert into tb_brand(id,brandName,companyName,ordered,status,imageUrl,flag) values (null,#{brandName},#{companyName},#{ordered},#{status},#{imageUrl},1);
+    </insert>
+
+
+    <update id="updateByIds">
+        update tb_brand set flag = 0 where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <select id="selectByPageAndCondition" resultType="com.zyf.pojo.Brand">
+        select id,brandName,companyName,ordered,status , imageUrl from tb_brand
+        <where>
+            <if test="brand.brandName != null and brand.brandName != '' ">
+                and brandName like #{brand.brandName}
+            </if>
+            <if test="brand.companyName != null and brand.companyName != '' ">
+                and companyName like #{brand.companyName}
+            </if>
+            <if test="brand.status != null and brand.status != '' ">
+                and status = #{brand.status}
+            </if>
+            and flag = 1
+        </where>
+        limit #{begin},#{size};
+    </select>
+
+    <select id="selectCountByCodition" resultType="java.lang.Integer">
+        select count(*) from tb_brand
+        <where>
+            <if test="brandName != null and brandName != '' ">
+                and brandName like #{brandName}
+            </if>
+            <if test="companyName != null and companyName != '' ">
+                and companyName like #{companyName}
+            </if>
+            <if test="status != null and status != '' ">
+                and status = #{status}
+            </if>
+            and flag = 1
+        </where>
+    </select>
+
+
+    <update id="updateById">
+        update tb_brand  set flag = 0 where id = #{id};
+    </update>
+
+    <update id="updateImagesByBrandNames">
+        update tb_brand set flag = 0 where brandName in
+        <foreach collection="brandNames" item="brandName" separator="," open="(" close=")">
+            #{brandName}
+        </foreach>
+    </update>
+
+
+    <select id="selectBrandById" resultType="com.zyf.pojo.Brand">
+        select id,brandName,companyName,ordered,status,flag from tb_brand where id = #{id} and flag = 1;
+    </select>
+
+    <select id="selectByIds" resultType="com.zyf.pojo.Brand">
+        select brandName from tb_brand where flag = 1 and id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <update id="updateBrand">
+--         alter  table tb_brand drop if exists foreign key brandName;
+        update tb_brand set
+            brandName = #{brand.brandName},companyName = #{brand.companyName},ordered = #{brand.ordered},status = #{brand.status}
+        where id = #{id};
+    </update>
+
+    <update id="updateBrandImageUrl">
+        update tb_brand set imageUrl = #{imageUrl} where brandName = #{brandName};
+--         ALTER TABLE tb_brand add CONSTRAINT brandName foreign key(brandName) REFERENCES tb_brand(brandName);
+    </update>
+
+    <update id="updateImageName">
+        update tb_brand set brandName = #{newBrandName} , imageUrl = #{imageUrl} where id = #{id};
+    </update>
+
+    <select id="selectBrandName" resultType="java.lang.String">
+        select brandName from tb_brand where brandName = #{brandName} and flag = 1;
+    </select>
+
+    <select id="selecttb_brand" resultType="java.lang.String">
+        select brandName from tb_brand where brandName = #{brandName} and flag = 1;
+    </select>
+
+    <select id="selectBrandImages" resultType="com.zyf.pojo.Brand">
+        select brandName,imageUrl from tb_brand where imageUrl = #{imageUrl} and flag = 1;
+    </select>
+
+    <select id="selectImageUrl" resultType="java.lang.String">
+        select imageUrl from tb_brand where imageUrl = #{imageUrl} and id &lt;&gt; #{id};
+    </select>
+
+    <select id="selectBrandNameById" resultType="java.lang.String">
+        select brandName from tb_brand where id = #{id} and flag = 1;
+    </select>
+
+    <select id="selectImgByIds" resultType="com.zyf.pojo.Brand">
+        select brandName,imageUrl from tb_brand where flag = 1 and id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectImgById" resultType="com.zyf.pojo.Brand">
+        select brandName,imageUrl from tb_brand where id = #{id} and flag = 1;
+    </select>
+
+    <select id="selectBrandBySearch" resultType="com.zyf.pojo.Brand">
+        select id , brandName , companyName from tb_brand where flag = 1 and brandName like #{brandName};
+    </select>
+
+    <update id="updateImageUrl">
+        update tb_brand  set flag = 0 where brandName = #{brandName};
+    </update>
+
+    <select id="selectPriceByBrandName" resultType="java.lang.Integer">
+        select ordered from tb_brand where brandName = #{brandName};
+    </select>
+
+    <select id="selectImgUrlById" resultType="java.lang.String">
+        select imageUrl from tb_brand where id = #{id};
+    </select>
+
+    <select id="selectRepeat" resultType="com.zyf.pojo.Brand">
+        select id , brandName , companyName , ordered , status , imageUrl , flag from tb_brand where brandName = #{brandName} and companyName = #{companyName} and id &lt;&gt; #{id};
+    </select>
+
+    <select id="selectRemoveBrand" resultType="com.zyf.pojo.Brand">
+        select id , brandName , companyName , ordered , status , imageUrl from tb_brand where flag = 0;
+    </select>
+
+
+    <update id="updateRemoveBrand">
+        update tb_brand set flag = 1 where id = #{id};
+    </update>
+
+    <select id="selectLikeRemoveBrand" resultType="com.zyf.pojo.Brand">
+        select id , brandName , companyName , ordered , status , imageUrl from tb_brand
+            <where>
+                <if test="brandName != null and brandName != ''">
+                    and brandName like #{brandName}
+                </if>
+                <if test="companyName != null and companyName !=''">
+                    and companyName like #{companyName}
+                </if>
+                and flag = 0
+            </where>
+    </select>
+
+    <select id="selectConfirmBrand" resultType="com.zyf.pojo.Brand">
+        select brandName , imageUrl from tb_brand where
+            brandName = #{brandName} and companyName = #{companyName} and flag = 1
+    </select>
+</mapper>
