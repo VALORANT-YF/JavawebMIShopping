@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zyf.mapper.ShoppingMapper">
+    <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
+
+    <insert id="addBuyBrand">
+        insert into tb_shopping(addressee,brandName,brandImg,receiptAddress,shoppingAccount,price,brandNumber)
+            values (#{addressee},#{brandName},#{brandImg},#{receiptAddress},#{shoppingAccount},#{price},#{brandNumber});
+    </insert>
+
+
+
+    <select id="selectRepeatInformation" resultType="com.zyf.pojo.Shopping">
+        select addressee , brandName , receiptAddress , shoppingAccount , brandNumber , price from tb_shopping where
+            addressee = #{addressee} and brandName = #{brandName} and receiptAddress = #{receiptAddress} and shoppingAccount = #{shoppingAccount};
+    </select>
+
+    <update id="updateBrandNumberInformation">
+        update tb_shopping set brandNumber = #{brandNumber} , price = #{price} where
+            addressee = #{Shopping.addressee} and brandName = #{Shopping.brandName} and receiptAddress = #{Shopping.receiptAddress} and shoppingAccount = #{Shopping.shoppingAccount};
+    </update>
+
+    <select id="selectFinishMoney" resultType="com.zyf.pojo.Shopping">
+        select id , addressee , brandName , receiptAddress , brandNumber , price , brandImg from tb_shopping where
+            shoppingAccount = #{shoppingAccount};
+    </select>
+
+    <select id="selectFinishLike" resultType="com.zyf.pojo.Shopping">
+        select id , addressee , brandName , receiptAddress , brandNumber , price , brandImg , shoppingAccount  from tb_shopping
+        <where>
+            <if test="brandName != null and brandName != '' ">
+                and brandName like #{brandName}
+            </if>
+            <if test="addressee != null and addressee != '' ">
+                and addressee like #{addressee}
+            </if>
+            <if test="shoppingAccount != null and shoppingAccount != '' ">
+                and shoppingAccount = #{shoppingAccount}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteFinishBuy">
+        delete from tb_shopping where shoppingAccount = #{shoppingAccount};
+    </delete>
+
+    <delete id="deleteFinishBrandById">
+        delete from tb_shopping where id = #{id};
+    </delete>
+
+    <delete id="deleteFinishBrandByIds">
+        delete from tb_shopping where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
