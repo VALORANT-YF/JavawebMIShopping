@@ -3,20 +3,4 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-
-    <servlet>
-<!--        Servlet的名称-->
-        <servlet-name>StaticFileServlet</servlet-name>
-<!--        Servlet的全类名-->
-        <servlet-class>com.zyf.web.servlet.StaticFileServlet</servlet-class>
-    </servlet>
-
-<!--    Servlet访问路径-->
-    <servlet-mapping>
-<!--        Servlet的名称-->
-        <servlet-name>StaticFileServlet</servlet-name>
-<!--        Servlet的访问路径-->
-        <url-pattern>/upload/images/*</url-pattern>
-    </servlet-mapping>
-
 </web-app>
