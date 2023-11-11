@@ -1,6 +1,6 @@
 package com.zyf.service;
 
-import com.zyf.mapper.BrandMapper;
+import mapper.BrandMapper;
 import com.zyf.pojo.Brand;
 import com.zyf.pojo.PageBean;
 import com.zyf.util.sqlSessionFactoryUtils;

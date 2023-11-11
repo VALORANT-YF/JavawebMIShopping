@@ -1,8 +1,7 @@
 package com.zyf.service;
 
-import com.zyf.mapper.UserMapper;
+import mapper.UserMapper;
 import com.zyf.pojo.User;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import com.zyf.util.sqlSessionFactoryUtils;

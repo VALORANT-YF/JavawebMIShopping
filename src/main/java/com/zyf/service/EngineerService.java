@@ -1,6 +1,6 @@
 package com.zyf.service;
 
-import com.zyf.mapper.EngineerMapper;
+import mapper.EngineerMapper;
 import com.zyf.pojo.Engineer;
 import com.zyf.pojo.EngineerInformation;
 import com.zyf.util.sqlSessionFactoryUtils;

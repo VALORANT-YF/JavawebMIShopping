@@ -131,7 +131,10 @@
             </div>
         </div>
     </div>
+
+    <button id="test">测试</button>
 <script>
+    
     //页面渲染时,判断用户是否完善个人信息
     //个人信息和注销账号的div盒子切换
     const btns = document.querySelectorAll(".btn");
@@ -170,6 +173,17 @@
     let password;//查询出的密码
     //获取用户登录时的账号
     window.onload = function (){
+
+        document.getElementById("test").addEventListener('click',function(){
+        console.log(1)
+        axios({
+            method:"post",
+            url:"http://localhost:8080/user-rest/gerSelfInformation"
+        }).then(function(resp){
+            console.log(resp.data)
+        })
+    })
+    
         axios({
             method:"get",
             url:"http://localhost:8080/Java_war/user/indexshow"

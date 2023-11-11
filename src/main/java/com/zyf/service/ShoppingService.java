@@ -1,6 +1,6 @@
 package com.zyf.service;
 
-import com.zyf.mapper.ShoppingMapper;
+import mapper.ShoppingMapper;
 import com.zyf.pojo.Shopping;
 import com.zyf.util.sqlSessionFactoryUtils;
 import org.apache.ibatis.session.SqlSession;

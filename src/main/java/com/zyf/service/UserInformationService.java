@@ -1,7 +1,7 @@
 package com.zyf.service;
 
 
-import com.zyf.mapper.UserInformationMapper;
+import mapper.UserInformationMapper;
 import com.zyf.pojo.UserInformation;
 import com.zyf.util.sqlSessionFactoryUtils;
 import org.apache.commons.fileupload.FileItem;

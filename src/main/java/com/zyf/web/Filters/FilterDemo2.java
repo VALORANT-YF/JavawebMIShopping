@@ -46,7 +46,7 @@ public class FilterDemo2 implements Filter
         }
         else
         {
-            req.getRequestDispatcher("http://http://localhost:8081").forward(req,servletResponse);
+            req.getRequestDispatcher("//http://localhost:8081").forward(req,servletResponse);
         }
     }
 
